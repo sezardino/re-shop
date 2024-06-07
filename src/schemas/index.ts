@@ -6,7 +6,7 @@ export const ProductSchema = z.object({
 
 export const InventoryItemSchema = z
   .object({
-    quantity: z.number({ required_error: "Quantity is required" }),
+    quantity: z.coerce.number({ required_error: "Quantity is required" }),
   })
   .merge(ProductSchema);
 

@@ -17,6 +17,8 @@ export abstract class AbstractApiModule {
       config
     );
 
-    return schema.parse(response.data);
+    const parsed = schema.parse(response.data);
+
+    return parsed;
   }
 }

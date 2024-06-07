@@ -20,7 +20,7 @@ const stylingMap: Record<TypographyStyling, string> = {
   h2: "text-3xl tracking-tight",
   h3: "text-2xl tracking-tight",
   h4: "text-xl tracking-tight",
-  base: "leading-7",
+  base: "text-base leading-7",
   lead: "text-xl",
   large: "text-lg",
   small: "text-sm",

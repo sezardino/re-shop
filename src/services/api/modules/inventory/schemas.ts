@@ -6,7 +6,7 @@ export const InventoryResponseSchema = z.array(InventoryItemSchema);
 export const AddItemToInventoryRequestSchema = z.array(
   z.object({
     name: z.string({ required_error: "Name is required" }),
-    quantity: z.number({ required_error: "Quantity is required" }),
+    quantity: z.coerce.number({ required_error: "Quantity is required" }),
   })
 );
 

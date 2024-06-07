@@ -1,8 +1,8 @@
-import Confetti from 'canvas-confetti';
+import Confetti from "canvas-confetti";
 
-export * from './canon';
+export * from "./canon";
 
-interface ConfettiOptions extends Confetti.Options {
+type ConfettiOptions = Confetti.Options & {
   particleCount?: number;
   angle?: number;
   spread?: number;
@@ -21,10 +21,13 @@ interface ConfettiOptions extends Confetti.Options {
   resize?: boolean;
   canvas?: HTMLCanvasElement | null;
   scalar?: number;
-}
+};
 
 const confetti = (options: ConfettiOptions) => {
-  if (options.disableForReducedMotion && window.matchMedia('(prefers-reduced-motion)').matches) {
+  if (
+    options.disableForReducedMotion &&
+    window.matchMedia("(prefers-reduced-motion)").matches
+  ) {
     return;
   }
 
