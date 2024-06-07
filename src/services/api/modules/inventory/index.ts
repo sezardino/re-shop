@@ -1,8 +1,11 @@
 import { AbstractApiModule } from "../../helpers";
 import {
+  AddItemToInventoryErrorResponse,
   AddItemToInventoryRequest,
+  AddItemToInventoryResponse,
   AddItemToInventoryResponseSchema,
   InventoryResponseSchema,
+  ResetInventoryResponseSchema,
 } from "./schemas";
 
 export * from "./schemas";
@@ -17,7 +20,10 @@ export class InventoryApiModule extends AbstractApiModule {
   }
 
   addItem(dto: AddItemToInventoryRequest) {
-    return this.fetch({
+    return this.fetch<
+      AddItemToInventoryResponse,
+      AddItemToInventoryErrorResponse
+    >({
       url: "inventory",
       method: "PUT",
       data: dto,
@@ -30,7 +36,7 @@ export class InventoryApiModule extends AbstractApiModule {
       url: "inventory/reset",
       method: "POST",
       data: dto,
-      schema: AddItemToInventoryResponseSchema,
+      schema: ResetInventoryResponseSchema,
     });
   }
 }

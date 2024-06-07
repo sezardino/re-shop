@@ -2,10 +2,10 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ZodSchema } from "zod";
 
 export abstract class AbstractApiModule {
-  url: string;
+  private url: string;
 
   constructor() {
-    this.url = "https://api.example.com";
+    this.url = process.env.NEXT_PUBLIC_API_URL as string;
   }
 
   protected async fetch<T, Error = object>(

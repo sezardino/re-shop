@@ -1,7 +1,9 @@
 import { AbstractApiModule } from "../../helpers";
 import {
   AllProductsResponseSchema,
+  CreateProductErrorResponse,
   CreateProductRequest,
+  CreateProductResponse,
   CreateProductResponseSchema,
 } from "./schemas";
 
@@ -17,7 +19,7 @@ export class ProductsApiModule extends AbstractApiModule {
   }
 
   create(dto: CreateProductRequest) {
-    return this.fetch({
+    return this.fetch<CreateProductResponse, CreateProductErrorResponse>({
       url: "products",
       method: "PUT",
       data: dto,

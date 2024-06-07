@@ -1,5 +1,4 @@
 import {
-  InvalidateQueryFilters,
   UseMutationOptions,
   useMutation,
   useQueryClient,
@@ -12,11 +11,7 @@ interface UseMutationHelper<
   Args extends unknown,
   Err extends unknown
 > extends UseMutationOptions<Res, Err, Var, unknown> {
-  getQueriesToInvalidate?: (
-    data: Res,
-    variables: Var,
-    args?: Args
-  ) => InvalidateQueryFilters[];
+  getQueriesToInvalidate?: (data: Res, variables: Var, args?: Args) => any[][];
   errorMessage?: string;
   successMessage?: string;
   args?: Args;
@@ -48,7 +43,7 @@ export const useMutationHelper = <
         const queries = getQueriesToInvalidate(res, vars, args);
         queries
           .filter(Boolean)
-          .forEach((query) => client.invalidateQueries(query));
+          .forEach((query) => client.invalidateQueries({ queryKey: query }));
       }
 
       if (onSuccess) onSuccess(res, vars, ctx);
