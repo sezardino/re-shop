@@ -1,20 +1,13 @@
+import { ProductSchema } from "@/schemas";
 import { z } from "zod";
 
-export const AllProductsResponseSchema = z.array(
-  z.object({
-    name: z.string({ required_error: "Name is required" }),
-  })
-);
+export const AllProductsResponseSchema = z.array(ProductSchema);
 
 export const CreateProductRequestSchema = z.object({
   name: z.string(),
 });
 
-export const CreateProductResponseSchema = z.array(
-  z.object({
-    name: z.string({ required_error: "Name is required" }),
-  })
-);
+export const CreateProductResponseSchema = z.array(ProductSchema);
 
 export const CreateProductErrorResponseSchema = z.object({ error: z.string() });
 

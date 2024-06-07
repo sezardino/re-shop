@@ -12,7 +12,7 @@ export * from "./schemas";
 export class ProductsApiModule extends AbstractApiModule {
   all() {
     return this.fetch({
-      url: "products",
+      url: "product/all",
       method: "GET",
       schema: AllProductsResponseSchema,
     });
@@ -20,7 +20,7 @@ export class ProductsApiModule extends AbstractApiModule {
 
   create(dto: CreateProductRequest) {
     return this.fetch<CreateProductResponse, CreateProductErrorResponse>({
-      url: "products",
+      url: "product",
       method: "PUT",
       data: dto,
       schema: CreateProductResponseSchema,
