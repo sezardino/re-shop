@@ -4,6 +4,7 @@ import {
   AddItemToInventoryRequest,
   AddItemToInventoryResponse,
   AddItemToInventoryResponseSchema,
+  AddItemsToInventoryRequest,
   InventoryResponseSchema,
   ResetInventoryResponseSchema,
 } from "./schemas";
@@ -25,7 +26,19 @@ export class InventoryApiModule extends AbstractApiModule {
       AddItemToInventoryErrorResponse
     >({
       url: "inventory",
-      method: "PUT",
+      method: "POST",
+      data: dto,
+      schema: AddItemToInventoryResponseSchema,
+    });
+  }
+
+  addItems(dto: AddItemsToInventoryRequest) {
+    return this.fetch<
+      AddItemToInventoryResponse,
+      AddItemToInventoryErrorResponse
+    >({
+      url: "inventory",
+      method: "POST",
       data: dto,
       schema: AddItemToInventoryResponseSchema,
     });

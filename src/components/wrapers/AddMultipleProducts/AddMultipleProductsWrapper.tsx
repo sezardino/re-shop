@@ -8,6 +8,7 @@ import {
   AddMultipleItemsToInventoryForm,
   AddMultipleItemsToInventoryFormValues,
 } from "@/components/forms/AddMultipleItemsToInventory/AddMultipleItemsToInventoryForm";
+import { useAddItemsToInventoryMutation } from "@/hooks";
 import { useProductsList } from "@/hooks/use-products-list";
 import { confettiCannon } from "@/libs";
 import { Button, Skeleton } from "@nextui-org/react";
@@ -28,6 +29,8 @@ export const AddMultipleItemsToInventoryWrapper: FC<
   const { isOpen, onClose, ...rest } = props;
 
   const { products, isItemsLoading } = useProductsList(isOpen);
+  const { mutateAsync: addMultipleItems, isPending: isAddingItems } =
+    useAddItemsToInventoryMutation();
 
   const [step, setStep] = useState<"form" | "preview" | "success">("form");
   const [previewData, setPreviewData] =
@@ -44,7 +47,7 @@ export const AddMultipleItemsToInventoryWrapper: FC<
     if (!previewData) return;
 
     try {
-      // TODO: add mutation
+      await addMultipleItems(previewData.items);
 
       setStep("success");
       setPreviewData(null);

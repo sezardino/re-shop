@@ -1,11 +1,15 @@
 import { useMutationHelper } from "@/libs";
-import { CreateProductErrorResponse, api } from "@/services";
+import {
+  CreateProductErrorResponse,
+  CreateProductRequest,
+  api,
+} from "@/services";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 export const useCreateProductMutation = () =>
   useMutationHelper({
-    mutationFn: api.products.create,
+    mutationFn: (dto: CreateProductRequest) => api.products.create(dto),
     successMessage: "Product created successfully",
     onError: (error) => {
       const typedError = error as AxiosError<CreateProductErrorResponse>;

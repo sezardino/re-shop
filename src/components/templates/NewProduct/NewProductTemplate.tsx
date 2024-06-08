@@ -1,12 +1,18 @@
 import { ModalWithDescription } from "@/components/UI/ModalWithDescription";
-import { NewProductForm } from "@/components/forms/NewProduct/NewProductForm";
+import {
+  NewProductForm,
+  NewProductFormValues,
+} from "@/components/forms/NewProduct/NewProductForm";
 import { ProjectUrls } from "@/const";
 import { useRouter } from "next/router";
 import { FC } from "react";
 
-export type NewProductTemplateProps = {};
+export type NewProductTemplateProps = {
+  onCreateProduct: (product: NewProductFormValues) => void;
+};
 
 export const NewProductTemplate: FC<NewProductTemplateProps> = (props) => {
+  const { onCreateProduct } = props;
   const router = useRouter();
 
   return (
@@ -22,7 +28,7 @@ export const NewProductTemplate: FC<NewProductTemplateProps> = (props) => {
       >
         <NewProductForm
           onCancelClick={() => router.push(ProjectUrls.home)}
-          onFormSubmit={() => undefined}
+          onFormSubmit={onCreateProduct}
         />
       </ModalWithDescription>
     </>
