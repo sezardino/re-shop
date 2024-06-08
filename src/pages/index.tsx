@@ -1,5 +1,8 @@
 import { HomeTemplate } from "@/components/templates/Home/HomeTemplate";
-import { useAddItemToInventoryMutation } from "@/hooks";
+import {
+  useAddItemToInventoryMutation,
+  useResetInventoryMutation,
+} from "@/hooks";
 import { useProductsList } from "@/hooks/use-products-list";
 
 const HomePage = () => {
@@ -7,14 +10,18 @@ const HomePage = () => {
   const { inventoryError, isItemsLoading, products, productsError } =
     useProductsList();
 
-  const { mutateAsync: addProduct, isPending } =
+  const { mutateAsync: addProduct, isPending: isAddProductLoading } =
     useAddItemToInventoryMutation();
+
+  const { mutateAsync: resetInventory, isPending: isResetInventoryLoading } =
+    useResetInventoryMutation();
 
   return (
     <HomeTemplate
       isItemsLoading={isItemsLoading}
       products={products}
       onAddItemToInventory={addProduct}
+      onResetInventory={() => resetInventory({})}
     />
   );
 };

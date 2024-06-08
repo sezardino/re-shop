@@ -1,3 +1,4 @@
+import { ConfirmModal } from "@/components/UI/ConfirmModal";
 import { SearchForm } from "@/components/UI/SearchForm";
 import { Icon, IconNames } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
@@ -9,7 +10,17 @@ import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMult
 import { ProjectUrls } from "@/const";
 import { Product } from "@/schemas";
 import { AddItemToInventoryRequest } from "@/services";
-import { Button, Switch, Tab, Tabs, cn } from "@nextui-org/react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Switch,
+  Tab,
+  Tabs,
+  cn,
+} from "@nextui-org/react";
 import Link from "next/link";
 import { FC, Fragment, useMemo, useState } from "react";
 
@@ -17,6 +28,7 @@ export type HomeTemplateProps = {
   products?: (Product & { id: string; quantity: number })[];
   isItemsLoading: boolean;
   onAddItemToInventory: (values: AddItemToInventoryRequest) => Promise<any>;
+  onResetInventory: () => Promise<any>;
 };
 
 type GridLayout = "list" | "grid";
@@ -27,12 +39,15 @@ const gridLayouts: { label: string; id: GridLayout; icon: IconNames }[] = [
 ];
 
 export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
-  const { isItemsLoading, products, onAddItemToInventory } = props;
+  const { isItemsLoading, products, onAddItemToInventory, onResetInventory } =
+    props;
   const [itemToAddId, setItemToAddId] = useState<string | null>(null);
   const [gridLayout, setGridLayout] = useState<GridLayout>("list");
   const [search, setSearch] = useState("");
   const [showProductsInInventory, setShowProductsInInventory] = useState(false);
   const [isMultipleModalOpen, setIsMultipleModalOpen] = useState(false);
+  const [isResetInventoryModalOpen, setIsResetInventoryModalOpen] =
+    useState(false);
 
   const filteredProducts = useMemo(() => {
     if (!products) return [];
@@ -74,6 +89,13 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
     } catch (error) {}
   };
 
+  const resetInventoryHandler = async () => {
+    try {
+      await onResetInventory();
+      setIsResetInventoryModalOpen(false);
+    } catch (error) {}
+  };
+
   return (
     <>
       <main className="container mx-auto grid grid-cols-1 gap-10 py-20">
@@ -82,57 +104,72 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
             Inventory
           </Typography>
 
-          <div className="flex items-center gap-3">
-            <Button as={Link} color="primary" href={ProjectUrls.newProduct}>
-              Create new product
-            </Button>
-            <Button
-              color="primary"
-              onClick={() => setIsMultipleModalOpen(true)}
-            >
-              Add multiple items
-            </Button>
-          </div>
+          <Button as={Link} color="primary" href={ProjectUrls.newProduct}>
+            Create new product
+          </Button>
         </header>
 
         <section className="grid grid-cols-1 gap-4">
-          <header className="flex items-center justify-between gap-3 flex-wrap">
-            <SearchForm
-              size="md"
-              placeholder="Search by name"
-              className="max-w-80"
-              onSearch={setSearch}
-            />
+          <header className="grid grid-cols-1 gap-2">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button
+                  variant="bordered"
+                  color="secondary"
+                  className="justify-self-end"
+                >
+                  <Typography level="span">Actions</Typography>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem onClick={() => setIsMultipleModalOpen(true)}>
+                  Add multiple items to inventory
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => setIsResetInventoryModalOpen(true)}
+                >
+                  Reset inventory
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <SearchForm
+                size="md"
+                placeholder="Search by name"
+                className="max-w-80"
+                onSearch={setSearch}
+              />
 
-            <div className="flex items-center gap-2">
-              <Switch
-                isSelected={showProductsInInventory}
-                onValueChange={setShowProductsInInventory}
-                classNames={{
-                  label: "-order-1 mr-2",
-                  wrapper: "mr-0",
-                }}
-              >
-                Show products in inventory
-              </Switch>
-              <Tabs
-                selectedKey={gridLayout}
-                onSelectionChange={(key) => setGridLayout(key as GridLayout)}
-                aria-label="Grid layout"
-              >
-                {gridLayouts.map(({ icon, id, label }) => (
-                  <Tab
-                    key={id}
-                    textValue={label}
-                    title={
-                      <div className="flex items-center gap-1">
-                        <Typography level="span">{label}</Typography>
-                        <Icon name={icon} size={16} className="-order-1" />
-                      </div>
-                    }
-                  />
-                ))}
-              </Tabs>
+              <div className="flex items-center gap-2">
+                <Switch
+                  isSelected={showProductsInInventory}
+                  onValueChange={setShowProductsInInventory}
+                  classNames={{
+                    label: "-order-1 mr-2",
+                    wrapper: "mr-0",
+                  }}
+                >
+                  Show products in inventory
+                </Switch>
+                <Tabs
+                  selectedKey={gridLayout}
+                  onSelectionChange={(key) => setGridLayout(key as GridLayout)}
+                  aria-label="Grid layout"
+                >
+                  {gridLayouts.map(({ icon, id, label }) => (
+                    <Tab
+                      key={id}
+                      textValue={label}
+                      title={
+                        <div className="flex items-center gap-1">
+                          <Typography level="span">{label}</Typography>
+                          <Icon name={icon} size={16} className="-order-1" />
+                        </div>
+                      }
+                    />
+                  ))}
+                </Tabs>
+              </div>
             </div>
           </header>
           <ul
@@ -178,6 +215,25 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
       <AddMultipleItemsToInventoryWrapper
         isOpen={isMultipleModalOpen}
         onClose={() => setIsMultipleModalOpen(false)}
+      />
+
+      <ConfirmModal
+        isOpen={isResetInventoryModalOpen}
+        onClose={() => setIsResetInventoryModalOpen(false)}
+        title="Reset inventory"
+        description="Are you sure that you wont to reset your inventory"
+        buttons={[
+          {
+            children: "Cancel",
+            variant: "bordered",
+            onClick: () => setIsResetInventoryModalOpen(false),
+          },
+          {
+            children: "Reset inventory",
+            color: "danger",
+            onClick: resetInventoryHandler,
+          },
+        ]}
       />
     </>
   );

@@ -44,11 +44,10 @@ export class InventoryApiModule extends AbstractApiModule {
     });
   }
 
-  reset(dto: AddItemToInventoryRequest) {
+  reset() {
     return this.fetch({
       url: "inventory/reset",
       method: "POST",
-      data: dto,
       schema: ResetInventoryResponseSchema,
     });
   }
