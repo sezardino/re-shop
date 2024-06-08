@@ -1,4 +1,4 @@
-# Re-Store (Inventory Management System)
+# Re-Shop (Inventory Management System)
 
 ## Introduction
 
