@@ -1,12 +1,14 @@
 import { SearchForm } from "@/components/UI/SearchForm";
 import { Icon, IconNames } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
+import { AddItemsToInventoryFormValues } from "@/components/forms/AddItemsToInventory/AddItemsToInventoryForm";
 import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItemsToInventaryModal";
 import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard";
 import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
 import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMultipleProducts/AddMultipleProductsWrapper";
 import { ProjectUrls } from "@/const";
 import { Product } from "@/schemas";
+import { AddItemToInventoryRequest } from "@/services";
 import { Button, Switch, Tab, Tabs, cn } from "@nextui-org/react";
 import Link from "next/link";
 import { FC, Fragment, useMemo, useState } from "react";
@@ -14,6 +16,7 @@ import { FC, Fragment, useMemo, useState } from "react";
 export type HomeTemplateProps = {
   products?: (Product & { id: string; quantity: number })[];
   isItemsLoading: boolean;
+  onAddItemToInventory: (values: AddItemToInventoryRequest) => Promise<any>;
 };
 
 type GridLayout = "list" | "grid";
@@ -24,7 +27,7 @@ const gridLayouts: { label: string; id: GridLayout; icon: IconNames }[] = [
 ];
 
 export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
-  const { isItemsLoading, products } = props;
+  const { isItemsLoading, products, onAddItemToInventory } = props;
   const [itemToAddId, setItemToAddId] = useState<string | null>(null);
   const [gridLayout, setGridLayout] = useState<GridLayout>("list");
   const [search, setSearch] = useState("");
@@ -56,6 +59,20 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
 
     return itemToAdd;
   }, [itemToAddId, products]);
+
+  const addItemsHandler = async (values: AddItemsToInventoryFormValues) => {
+    console.log(itemToAddToInventory);
+    if (!itemToAddToInventory) return;
+
+    try {
+      await onAddItemToInventory({
+        name: itemToAddToInventory.name,
+        quantity: values.quantity,
+      });
+
+      setItemToAddId(null);
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -153,8 +170,8 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
           isOpen={!!itemToAddToInventory}
           onClose={() => setItemToAddId(null)}
           product={itemToAddToInventory}
-          currentInventoryCount={itemToAddToInventory.quantity}
-          onFormSubmit={() => undefined}
+          currentInventoryQuantity={itemToAddToInventory.quantity}
+          onFormSubmit={addItemsHandler}
         />
       )}
 

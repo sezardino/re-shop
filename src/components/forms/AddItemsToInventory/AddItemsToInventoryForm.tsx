@@ -4,18 +4,18 @@ import { Form, FormikProvider, useFormik } from "formik";
 import { useId, type ComponentPropsWithoutRef, type FC } from "react";
 import {
   ADD_ITEMS_TO_INVENTORY_SLIDER_MARKS,
-  MAX_ITEMS_COUNT_TO_ADD_TO_INVENTORY,
-  MIN_ITEMS_COUNT_TO_ADD_TO_INVENTORY,
+  MAX_ITEMS_QUANTITY_TO_ADD_TO_INVENTORY,
+  MIN_ITEMS_QUANTITY_TO_ADD_TO_INVENTORY,
   addItemsToInventoryFormValidationSchema,
 } from "./AddItemsToInventoryForm.const";
 
 export type AddItemsToInventoryFormValues = {
-  count: number;
+  quantity: number;
 };
 
 type Props = {
   onFormSubmit: (values: AddItemsToInventoryFormValues) => void;
-  currentInventoryCount: number;
+  currentInventoryQuantity: number;
   onCancelClick: () => void;
 };
 
@@ -26,7 +26,7 @@ export const AddItemsToInventoryForm: FC<AddItemsToInventoryFormProps> = (
   props
 ) => {
   const {
-    currentInventoryCount,
+    currentInventoryQuantity,
     onFormSubmit,
     onCancelClick,
     className,
@@ -38,7 +38,7 @@ export const AddItemsToInventoryForm: FC<AddItemsToInventoryFormProps> = (
 
   const formik = useFormik<AddItemsToInventoryFormValues>({
     initialValues: {
-      count: 1,
+      quantity: 1,
     },
     validationSchema: addItemsToInventoryFormValidationSchema,
     onSubmit: onFormSubmit,
@@ -47,25 +47,28 @@ export const AddItemsToInventoryForm: FC<AddItemsToInventoryFormProps> = (
   const sliderChangeEndHandler = (value: number | number[]) => {
     if (typeof value !== "number" || !Number.isFinite(value)) return;
 
-    formik.setFieldValue("count", value);
+    formik.setFieldValue("quantity", value);
   };
 
-  const isCountWithError = Boolean(formik.touched.count && formik.errors.count);
+  const isQuantityWithError = Boolean(
+    formik.touched.quantity && formik.errors.quantity
+  );
 
   return (
     <FormikProvider value={formik}>
+      {JSON.stringify(formik.errors)}
       <Form {...rest} className={cn("py-6 grid grid-cols-1 gap-10", className)}>
         <div className="grid grid-cols-1 gap-2">
           <Slider
             id={sliderId}
             label="How many items would you like to add?"
-            minValue={MIN_ITEMS_COUNT_TO_ADD_TO_INVENTORY}
-            maxValue={MAX_ITEMS_COUNT_TO_ADD_TO_INVENTORY}
-            defaultValue={formik.values.count}
+            minValue={MIN_ITEMS_QUANTITY_TO_ADD_TO_INVENTORY}
+            maxValue={MAX_ITEMS_QUANTITY_TO_ADD_TO_INVENTORY}
+            defaultValue={formik.values.quantity}
             onChangeEnd={sliderChangeEndHandler}
             marks={ADD_ITEMS_TO_INVENTORY_SLIDER_MARKS}
             aria-describedby={descriptionId}
-            aria-invalid={isCountWithError}
+            aria-invalid={isQuantityWithError}
             aria-errormessage={errorId}
           />
 
@@ -74,12 +77,12 @@ export const AddItemsToInventoryForm: FC<AddItemsToInventoryFormProps> = (
             styling="small"
             id={`${sliderId}-description`}
           >
-            Current inventory count: <b>{currentInventoryCount}</b>
+            Current inventory quantity: <b>{currentInventoryQuantity}</b>
           </Typography>
 
-          {isCountWithError && (
+          {isQuantityWithError && (
             <Typography id={`${sliderId}-error`} className="text-danger-500">
-              {formik.errors.count}
+              {formik.errors.quantity}
             </Typography>
           )}
         </div>

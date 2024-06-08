@@ -27,7 +27,7 @@ export class InventoryApiModule extends AbstractApiModule {
     >({
       url: "inventory",
       method: "POST",
-      data: dto,
+      data: [dto],
       schema: AddItemToInventoryResponseSchema,
     });
   }

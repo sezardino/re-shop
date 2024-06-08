@@ -15,7 +15,7 @@ type Props = {
 
 type PickedFormProps = Pick<
   AddItemsToInventoryFormProps,
-  "onFormSubmit" | "currentInventoryCount"
+  "onFormSubmit" | "currentInventoryQuantity"
 >;
 type OmittedModalProps = Omit<
   ModalWithDescriptionProps,
@@ -29,7 +29,7 @@ export type AddItemsToInventoryModal = PickedFormProps &
 export const AddItemsToInventoryModal: FC<AddItemsToInventoryModal> = (
   props
 ) => {
-  const { onClose, product, currentInventoryCount, onFormSubmit, ...rest } =
+  const { onClose, product, currentInventoryQuantity, onFormSubmit, ...rest } =
     props;
 
   const title = `How many "${product.name}" do you wont to add to inventory`;
@@ -43,7 +43,7 @@ export const AddItemsToInventoryModal: FC<AddItemsToInventoryModal> = (
       onClose={onClose}
     >
       <AddItemsToInventoryForm
-        currentInventoryCount={currentInventoryCount}
+        currentInventoryQuantity={currentInventoryQuantity}
         onFormSubmit={onFormSubmit}
         onCancelClick={onClose}
         aria-label={title}
