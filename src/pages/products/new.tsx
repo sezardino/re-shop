@@ -1,5 +1,7 @@
+import { NewProductTemplate } from "@/components/templates/NewProduct/NewProductTemplate";
+
 const NewProductPage = () => {
-  return <main>newproduct</main>;
+  return <NewProductTemplate />;
 };
 
 export default NewProductPage;

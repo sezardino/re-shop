@@ -29,7 +29,7 @@ export const ModalWithDescription: FC<ModalWithDescriptionProps> = (props) => {
           </Typography>
 
           {description && (
-            <Typography styling="base" isMuted>
+            <Typography styling="small" isMuted>
               {description}
             </Typography>
           )}
