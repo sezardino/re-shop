@@ -67,7 +67,6 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
   }, [itemToAddId, products]);
 
   const addItemsHandler = async (values: AddItemsToInventoryFormValues) => {
-    console.log(itemToAddToInventory);
     if (!itemToAddToInventory) return;
 
     try {

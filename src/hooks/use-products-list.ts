@@ -14,7 +14,6 @@ export const useProductsList = (enabled = true) => {
   } = useAllProductsQuery(enabled);
 
   const reducedProducts = useMemo(() => {
-    console.log(inventory, products);
     if (!products || !inventory) return [];
 
     const matchedProducts = products?.map((product) => {
