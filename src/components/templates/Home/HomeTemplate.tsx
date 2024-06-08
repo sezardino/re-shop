@@ -8,6 +8,7 @@ import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard"
 import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
 import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMultipleProducts/AddMultipleProductsWrapper";
 import { ProjectUrls } from "@/const";
+import { useProjectStorageField } from "@/hooks";
 import { Product } from "@/schemas";
 import { AddItemToInventoryRequest } from "@/services";
 import {
@@ -16,6 +17,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Skeleton,
   Switch,
   Tab,
   Tabs,
@@ -31,9 +33,9 @@ export type HomeTemplateProps = {
   onResetInventory: () => Promise<any>;
 };
 
-type GridLayout = "list" | "grid";
+export type HomeGridLayout = "list" | "grid";
 
-const gridLayouts: { label: string; id: GridLayout; icon: IconNames }[] = [
+const gridLayouts: { label: string; id: HomeGridLayout; icon: IconNames }[] = [
   { label: "List", id: "list", icon: "FiList" },
   { label: "Cards", id: "grid", icon: "FiGrid" },
 ];
@@ -42,7 +44,7 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
   const { isItemsLoading, products, onAddItemToInventory, onResetInventory } =
     props;
   const [itemToAddId, setItemToAddId] = useState<string | null>(null);
-  const [gridLayout, setGridLayout] = useState<GridLayout>("list");
+  const [gridLayout, setGridLayout] = useProjectStorageField("homeGrid");
   const [search, setSearch] = useState("");
   const [showProductsInInventory, setShowProductsInInventory] = useState(false);
   const [isMultipleModalOpen, setIsMultipleModalOpen] = useState(false);
@@ -153,7 +155,9 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
                 </Switch>
                 <Tabs
                   selectedKey={gridLayout}
-                  onSelectionChange={(key) => setGridLayout(key as GridLayout)}
+                  onSelectionChange={(key) =>
+                    setGridLayout(key as HomeGridLayout)
+                  }
                   aria-label="Grid layout"
                 >
                   {gridLayouts.map(({ icon, id, label }) => (
@@ -180,24 +184,37 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
                 : "gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             )}
           >
-            {filteredProducts.map((product) => (
-              <Fragment key={product.id}>
-                {gridLayout === "list" && (
-                  <ProductListCard
-                    name={product.name}
-                    quantity={product.quantity}
-                    onAddClick={() => setItemToAddId(product.id)}
+            {isItemsLoading &&
+              new Array(12)
+                .fill(null)
+                .map((_, index) => (
+                  <Skeleton
+                    key={index}
+                    className={cn(
+                      "rounded-sm",
+                      gridLayout === "list" ? "h-10" : "h-80"
+                    )}
                   />
-                )}
-                {gridLayout === "grid" && (
-                  <ProductGridCard
-                    name={product.name}
-                    quantity={product.quantity}
-                    onAddClick={() => setItemToAddId(product.id)}
-                  />
-                )}
-              </Fragment>
-            ))}
+                ))}
+            {!isItemsLoading &&
+              filteredProducts.map((product) => (
+                <Fragment key={product.id}>
+                  {gridLayout === "list" && (
+                    <ProductListCard
+                      name={product.name}
+                      quantity={product.quantity}
+                      onAddClick={() => setItemToAddId(product.id)}
+                    />
+                  )}
+                  {gridLayout === "grid" && (
+                    <ProductGridCard
+                      name={product.name}
+                      quantity={product.quantity}
+                      onAddClick={() => setItemToAddId(product.id)}
+                    />
+                  )}
+                </Fragment>
+              ))}
           </ul>
         </section>
       </main>
