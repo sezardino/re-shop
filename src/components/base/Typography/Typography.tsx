@@ -13,7 +13,9 @@ type TypographyStyling =
   | "base"
   | "lead"
   | "large"
-  | "small";
+  | "small"
+  | "xs"
+  | "xxs";
 
 const stylingMap: Record<TypographyStyling, string> = {
   h1: "text-4xl lg:text-5xl tracking-tight",
@@ -24,6 +26,8 @@ const stylingMap: Record<TypographyStyling, string> = {
   lead: "text-xl",
   large: "text-lg",
   small: "text-sm",
+  xs: "text-xs",
+  xxs: "text-[10px]",
 };
 
 type TypographyWeight = "light" | "normal" | "medium" | "bold";

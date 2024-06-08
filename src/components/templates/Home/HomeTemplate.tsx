@@ -2,6 +2,7 @@ import { SearchForm } from "@/components/UI/SearchForm";
 import { Icon, IconNames } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
 import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItemsToInventaryModal";
+import { AddMultipleItemsToInventoryModal } from "@/components/modules/inventory/AddMultipleItemsToInventaryModal";
 import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard";
 import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
 import { Product } from "@/schemas";
@@ -9,7 +10,7 @@ import { Tab, Tabs, cn } from "@nextui-org/react";
 import { FC, Fragment, useMemo, useState } from "react";
 
 export type HomeTemplateProps = {
-  products?: (Product & { id: string; count: number })[];
+  products?: (Product & { id: string; quantity: number })[];
   isItemsLoading: boolean;
 };
 
@@ -87,14 +88,14 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
                 {gridLayout === "list" && (
                   <ProductListCard
                     name={product.name}
-                    count={product.count}
+                    quantity={product.quantity}
                     onAddClick={() => setItemToAddId(product.id)}
                   />
                 )}
                 {gridLayout === "grid" && (
                   <ProductGridCard
                     name={product.name}
-                    count={product.count}
+                    quantity={product.quantity}
                     onAddClick={() => setItemToAddId(product.id)}
                   />
                 )}
@@ -109,8 +110,16 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
           isOpen={!!itemToAddToInventory}
           onClose={() => setItemToAddId(null)}
           product={itemToAddToInventory}
-          currentInventoryCount={itemToAddToInventory.count}
+          currentInventoryCount={itemToAddToInventory.quantity}
           onFormSubmit={() => undefined}
+        />
+      )}
+
+      {!!products?.length && (
+        <AddMultipleItemsToInventoryModal
+          isOpen
+          onClose={() => {}}
+          products={products}
         />
       )}
     </>

@@ -13,10 +13,10 @@ const HomePage = () => {
     if (!products || !inventory) return [];
 
     const matchedProducts = products?.map((product) => {
-      const count: number =
+      const quantity: number =
         inventory?.find((item) => item.id === product.id)?.quantity || 0;
 
-      return { ...product, count };
+      return { ...product, quantity };
     });
 
     return matchedProducts;

@@ -14,7 +14,7 @@ export const ADD_ITEMS_TO_INVENTORY_SLIDER_MARKS = [
 
 export const addItemsToInventoryFormValidationSchema = toFormikValidationSchema(
   z.object({
-    count: z
+    quantity: z
       .number()
       .min(
         MIN_ITEMS_COUNT_TO_ADD_TO_INVENTORY,

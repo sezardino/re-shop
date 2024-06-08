@@ -13,14 +13,14 @@ import { FC, useState } from "react";
 
 type Props = {
   name: string;
-  count: number;
+  quantity: number;
   onAddClick: () => void;
 };
 
 export type ProductGridCardProps = CardProps & Props;
 
 export const ProductGridCard: FC<ProductGridCardProps> = (props) => {
-  const { name, count, onAddClick, className, ...rest } = props;
+  const { name, quantity, onAddClick, className, ...rest } = props;
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
@@ -39,7 +39,7 @@ export const ProductGridCard: FC<ProductGridCardProps> = (props) => {
       </CardHeader>
       <CardFooter className="mt-auto flex items-center justify-between gap-3 flex-wrap">
         <Typography level="p" styling="small">
-          {count} items in inventory
+          {quantity} items in inventory
         </Typography>
         <Tooltip content="Add items to inventory">
           <button

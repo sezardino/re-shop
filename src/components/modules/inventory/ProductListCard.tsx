@@ -12,14 +12,14 @@ import { FC } from "react";
 
 type Props = {
   name: string;
-  count: number;
+  quantity: number;
   onAddClick: () => void;
 };
 
 export type ProductListCardProps = CardProps & Props;
 
 export const ProductListCard: FC<ProductListCardProps> = (props) => {
-  const { name, count, onAddClick, className, ...rest } = props;
+  const { name, quantity, onAddClick, className, ...rest } = props;
 
   return (
     <Card
@@ -32,7 +32,7 @@ export const ProductListCard: FC<ProductListCardProps> = (props) => {
       </CardHeader>
       <CardFooter className="py-1 flex items-center justify-between gap-2">
         <Typography level="p" styling="small">
-          {count} items in inventory
+          {quantity} items in inventory
         </Typography>
         <Tooltip content="Add items to inventory">
           <button
