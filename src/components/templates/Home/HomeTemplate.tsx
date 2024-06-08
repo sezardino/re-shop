@@ -1,30 +1,19 @@
 import { ConfirmModal } from "@/components/UI/ConfirmModal";
+import { DropdownActions } from "@/components/UI/DropdownMenu";
 import { SearchForm } from "@/components/UI/SearchForm";
 import { Icon, IconNames } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
 import { AddItemsToInventoryFormValues } from "@/components/forms/AddItemsToInventory/AddItemsToInventoryForm";
 import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItemsToInventaryModal";
-import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard";
-import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
+import { InventoryList } from "@/components/modules/inventory/InventoryList";
 import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMultipleProducts/AddMultipleProductsWrapper";
 import { ProjectUrls } from "@/const";
 import { useProjectStorageField } from "@/hooks";
 import { Product } from "@/schemas";
 import { AddItemToInventoryRequest } from "@/services";
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Skeleton,
-  Switch,
-  Tab,
-  Tabs,
-  cn,
-} from "@nextui-org/react";
+import { Button, Switch, Tab, Tabs } from "@nextui-org/react";
 import Link from "next/link";
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 export type HomeTemplateProps = {
   products?: (Product & { id: string; quantity: number })[];
@@ -113,27 +102,24 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
 
         <section className="grid grid-cols-1 gap-4">
           <header className="grid grid-cols-1 gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button
-                  variant="bordered"
-                  color="secondary"
-                  className="justify-self-end"
-                >
-                  <Typography level="span">Actions</Typography>
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem onClick={() => setIsMultipleModalOpen(true)}>
-                  Add multiple items to inventory
-                </DropdownItem>
-                <DropdownItem
-                  onClick={() => setIsResetInventoryModalOpen(true)}
-                >
-                  Reset inventory
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <DropdownActions
+              triggerProps={{
+                variant: "bordered",
+                color: "secondary",
+              }}
+              items={[
+                {
+                  children: "Add multiple items to inventory",
+                  onClick: () => setIsMultipleModalOpen(true),
+                },
+                {
+                  children: "Reset inventory",
+                  onClick: () => setIsResetInventoryModalOpen(true),
+                },
+              ]}
+              className="justify-self-end"
+            />
+
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <SearchForm
                 size="md"
@@ -176,46 +162,14 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
               </div>
             </div>
           </header>
-          <ul
-            className={cn(
-              "grid",
-              gridLayout === "list"
-                ? "grid-cols-1 gap-1"
-                : "gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            )}
-          >
-            {isItemsLoading &&
-              new Array(12)
-                .fill(null)
-                .map((_, index) => (
-                  <Skeleton
-                    key={index}
-                    className={cn(
-                      "rounded-sm",
-                      gridLayout === "list" ? "h-10" : "h-80"
-                    )}
-                  />
-                ))}
-            {!isItemsLoading &&
-              filteredProducts.map((product) => (
-                <Fragment key={product.id}>
-                  {gridLayout === "list" && (
-                    <ProductListCard
-                      name={product.name}
-                      quantity={product.quantity}
-                      onAddClick={() => setItemToAddId(product.id)}
-                    />
-                  )}
-                  {gridLayout === "grid" && (
-                    <ProductGridCard
-                      name={product.name}
-                      quantity={product.quantity}
-                      onAddClick={() => setItemToAddId(product.id)}
-                    />
-                  )}
-                </Fragment>
-              ))}
-          </ul>
+
+          <InventoryList
+            layout={gridLayout}
+            isItemsLoading={isItemsLoading}
+            products={filteredProducts}
+            search={search}
+            onSelectProductToAddToInventory={setItemToAddId}
+          />
         </section>
       </main>
 

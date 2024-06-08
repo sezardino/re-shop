@@ -4,9 +4,9 @@ import {
   useResetInventoryMutation,
 } from "@/hooks";
 import { useProductsList } from "@/hooks/use-products-list";
+import Error from "next/error";
 
 const HomePage = () => {
-  // TODO: add error handling
   const { inventoryError, isItemsLoading, products, productsError } =
     useProductsList();
 
@@ -15,6 +15,9 @@ const HomePage = () => {
 
   const { mutateAsync: resetInventory, isPending: isResetInventoryLoading } =
     useResetInventoryMutation();
+
+  if (!isItemsLoading && (inventoryError || productsError))
+    return <Error statusCode={500} title="Something went wrong..." />;
 
   return (
     <HomeTemplate
