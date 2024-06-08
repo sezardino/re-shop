@@ -38,7 +38,7 @@ export const ProductGridCard: FC<ProductGridCardProps> = (props) => {
         </Skeleton>
       </CardHeader>
       <CardFooter className="mt-auto flex items-center justify-between gap-3 flex-wrap">
-        <Typography level="p" styling="small">
+        <Typography level="p" styling="xs" isMuted>
           {quantity} items in inventory
         </Typography>
         <Tooltip content="Add items to inventory">
@@ -47,7 +47,7 @@ export const ProductGridCard: FC<ProductGridCardProps> = (props) => {
             className="p-1 rounded-full bg-secondary-200"
             onClick={onAddClick}
           >
-            <Icon name="FiPlus" size={12} />
+            <Icon name="FiPlus" size={14} />
           </button>
         </Tooltip>
       </CardFooter>

@@ -5,8 +5,10 @@ import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItem
 import { AddMultipleItemsToInventoryModal } from "@/components/modules/inventory/AddMultipleItemsToInventaryModal";
 import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard";
 import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
+import { ProjectUrls } from "@/const";
 import { Product } from "@/schemas";
-import { Tab, Tabs, cn } from "@nextui-org/react";
+import { Button, Switch, Tab, Tabs, cn } from "@nextui-org/react";
+import Link from "next/link";
 import { FC, Fragment, useMemo, useState } from "react";
 
 export type HomeTemplateProps = {
@@ -26,14 +28,24 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
   const [itemToAddId, setItemToAddId] = useState<string | null>(null);
   const [gridLayout, setGridLayout] = useState<GridLayout>("list");
   const [search, setSearch] = useState("");
+  const [showProductsInInventory, setShowProductsInInventory] = useState(false);
+  const [isMultipleModalOpen, setIsMultipleModalOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
     if (!products) return [];
 
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [products, search]);
+    return products.filter((product) => {
+      const isSearchMatch = product.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      const isInInventory = product.quantity > 0;
+
+      return showProductsInInventory
+        ? isInInventory && isSearchMatch
+        : isSearchMatch;
+    });
+  }, [products, search, showProductsInInventory]);
 
   const itemToAddToInventory = useMemo(() => {
     if (!itemToAddId) return null;
@@ -47,33 +59,64 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
 
   return (
     <>
-      <main className="container mx-auto grid grid-cols-1 gap-10">
-        <Typography level="h1" styling="h2">
-          Inventory
-        </Typography>
+      <main className="container mx-auto grid grid-cols-1 gap-10 py-20">
+        <header className="flex items-center gap-3 flex-wrap justify-between">
+          <Typography level="h1" styling="h2">
+            Inventory
+          </Typography>
+
+          <div className="flex items-center gap-3">
+            <Button as={Link} color="primary" href={ProjectUrls.newProduct}>
+              Create new product
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => setIsMultipleModalOpen(true)}
+            >
+              Add multiple items
+            </Button>
+          </div>
+        </header>
 
         <section className="grid grid-cols-1 gap-4">
           <header className="flex items-center justify-between gap-3 flex-wrap">
-            <SearchForm onSearch={setSearch} className="max-w-80" />
+            <SearchForm
+              size="md"
+              placeholder="Search by name"
+              className="max-w-80"
+              onSearch={setSearch}
+            />
 
-            <Tabs
-              selectedKey={gridLayout}
-              onSelectionChange={(key) => setGridLayout(key as GridLayout)}
-              aria-label="Grid layout"
-            >
-              {gridLayouts.map(({ icon, id, label }) => (
-                <Tab
-                  key={id}
-                  textValue={label}
-                  title={
-                    <div className="flex items-center gap-1">
-                      <Typography level="span">{label}</Typography>
-                      <Icon name={icon} size={16} className="-order-1" />
-                    </div>
-                  }
-                />
-              ))}
-            </Tabs>
+            <div className="flex items-center gap-2">
+              <Switch
+                isSelected={showProductsInInventory}
+                onValueChange={setShowProductsInInventory}
+                classNames={{
+                  label: "-order-1 mr-2",
+                  wrapper: "mr-0",
+                }}
+              >
+                Show products in inventory
+              </Switch>
+              <Tabs
+                selectedKey={gridLayout}
+                onSelectionChange={(key) => setGridLayout(key as GridLayout)}
+                aria-label="Grid layout"
+              >
+                {gridLayouts.map(({ icon, id, label }) => (
+                  <Tab
+                    key={id}
+                    textValue={label}
+                    title={
+                      <div className="flex items-center gap-1">
+                        <Typography level="span">{label}</Typography>
+                        <Icon name={icon} size={16} className="-order-1" />
+                      </div>
+                    }
+                  />
+                ))}
+              </Tabs>
+            </div>
           </header>
           <ul
             className={cn(
@@ -117,8 +160,9 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
 
       {!!products?.length && (
         <AddMultipleItemsToInventoryModal
-          isOpen
-          onClose={() => {}}
+          isOpen={isMultipleModalOpen}
+          onFormSubmit={() => undefined}
+          onClose={() => setIsMultipleModalOpen(false)}
           products={products}
         />
       )}
