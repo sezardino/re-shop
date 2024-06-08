@@ -3,18 +3,21 @@ import { Icon } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
 import { FormikAutocomplete } from "@/components/formik/Autocomplete";
 import { FormikInput } from "@/components/formik/Input";
+import { FormFooter } from "@/components/modules/shared/FormFooter";
 import { Product } from "@/schemas";
 import {
   Accordion,
   AccordionItem,
   AutocompleteItem,
-  Button,
   Chip,
   cn,
 } from "@nextui-org/react";
 import { FieldArray, Form, FormikProvider, useFormik } from "formik";
 import { useState, type ComponentPropsWithoutRef, type FC } from "react";
-import { addMultipleItemsToInventoryFormValidationSchema } from "./AddMultipleItemsToInventoryForm.const";
+import {
+  addMultipleItemsToInventoryFormInitialValues,
+  addMultipleItemsToInventoryFormValidationSchema,
+} from "./AddMultipleItemsToInventoryForm.const";
 
 export type AddMultipleItemsToInventoryFormValues = {
   items: {
@@ -41,9 +44,7 @@ export const AddMultipleItemsToInventoryForm: FC<
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const formik = useFormik<AddMultipleItemsToInventoryFormValues>({
-    initialValues: {
-      items: [],
-    },
+    initialValues: addMultipleItemsToInventoryFormInitialValues,
     validationSchema: addMultipleItemsToInventoryFormValidationSchema,
     onSubmit: onFormSubmit,
   });
@@ -55,6 +56,7 @@ export const AddMultipleItemsToInventoryForm: FC<
 
     formik.setFieldValue(`items[${index}]`, {
       ...formikProduct,
+      name: product.name,
       id: key,
     });
   };
@@ -64,7 +66,7 @@ export const AddMultipleItemsToInventoryForm: FC<
 
     formik.setFieldValue("items", [
       ...formik.values.items,
-      { quantity: 1, id: "", accordionId },
+      { quantity: 1, name: "", id: "", accordionId },
     ]);
     setSelectedKeys([accordionId]);
   };
@@ -181,7 +183,12 @@ export const AddMultipleItemsToInventoryForm: FC<
               level="p"
               isMuted
               styling="small"
-              className="text-center"
+              className={cn(
+                "text-center",
+                typeof formik.errors.items === "string"
+                  ? "text-danger"
+                  : undefined
+              )}
             >
               No products added yet
             </Typography>
@@ -203,14 +210,11 @@ export const AddMultipleItemsToInventoryForm: FC<
           </ButtonWithTooltip>
         </div>
 
-        <div className="flex items-center gap-3 justify-between flex-wrap">
-          <Button type="reset" variant="bordered" onClick={onCancelClick}>
-            <Typography level="span">Cancel</Typography>
-          </Button>
-          <Button type="submit" color="primary">
-            <Typography level="span">Add</Typography>
-          </Button>
-        </div>
+        <FormFooter
+          onCancelClick={onCancelClick}
+          submit="Add product to inventory"
+          reset="Cancel"
+        />
       </Form>
     </FormikProvider>
   );

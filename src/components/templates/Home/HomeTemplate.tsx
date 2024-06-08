@@ -2,9 +2,9 @@ import { SearchForm } from "@/components/UI/SearchForm";
 import { Icon, IconNames } from "@/components/base/Icon/Icon";
 import { Typography } from "@/components/base/Typography/Typography";
 import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItemsToInventaryModal";
-import { AddMultipleItemsToInventoryModal } from "@/components/modules/inventory/AddMultipleItemsToInventaryModal";
 import { ProductGridCard } from "@/components/modules/inventory/ProductGridCard";
 import { ProductListCard } from "@/components/modules/inventory/ProductListCard";
+import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMultipleProducts/AddMultipleProductsWrapper";
 import { ProjectUrls } from "@/const";
 import { Product } from "@/schemas";
 import { Button, Switch, Tab, Tabs, cn } from "@nextui-org/react";
@@ -158,14 +158,10 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
         />
       )}
 
-      {!!products?.length && (
-        <AddMultipleItemsToInventoryModal
-          isOpen={isMultipleModalOpen}
-          onFormSubmit={() => undefined}
-          onClose={() => setIsMultipleModalOpen(false)}
-          products={products}
-        />
-      )}
+      <AddMultipleItemsToInventoryWrapper
+        isOpen={isMultipleModalOpen}
+        onClose={() => setIsMultipleModalOpen(false)}
+      />
     </>
   );
 };
