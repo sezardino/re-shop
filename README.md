@@ -18,7 +18,7 @@ This project is a [Next.js](https://nextjs.org/) application that provides an in
 
 1. Clone the repository to your local machine.
 2. Install the dependencies by running `yarn`.
-3. Create a `.env.local` file in the root directory and add the api URL as follows:
+3. Create a `.env` file in the root directory and add the api URL as follows:
    ```
    NEXT_PUBLIC_API_URL=http://localhost:3000/api
    ```
