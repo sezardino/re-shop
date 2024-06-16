@@ -8,7 +8,6 @@ import { AddItemsToInventoryModal } from "@/components/modules/inventory/AddItem
 import { InventoryList } from "@/components/modules/inventory/InventoryList";
 import { AddMultipleItemsToInventoryWrapper } from "@/components/wrapers/AddMultipleProducts/AddMultipleProductsWrapper";
 import { ProjectUrls } from "@/const";
-import { useProjectStorageField } from "@/hooks";
 import { Product } from "@/schemas";
 import { AddItemToInventoryRequest } from "@/services";
 import { Button, Switch, Tab, Tabs } from "@nextui-org/react";
@@ -33,7 +32,7 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
   const { isItemsLoading, products, onAddItemToInventory, onResetInventory } =
     props;
   const [itemToAddId, setItemToAddId] = useState<string | null>(null);
-  const [gridLayout, setGridLayout] = useProjectStorageField("homeGrid");
+  const [gridLayout, setGridLayout] = useState<HomeGridLayout>("list");
   const [search, setSearch] = useState("");
   const [showProductsInInventory, setShowProductsInInventory] = useState(false);
   const [isMultipleModalOpen, setIsMultipleModalOpen] = useState(false);
@@ -85,6 +84,8 @@ export const HomeTemplate: FC<HomeTemplateProps> = (props) => {
       setIsResetInventoryModalOpen(false);
     } catch (error) {}
   };
+
+  console.log({ gridLayout });
 
   return (
     <>

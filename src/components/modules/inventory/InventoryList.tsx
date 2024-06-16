@@ -26,6 +26,7 @@ export const InventoryList: FC<InventoryListProps> = (props) => {
     className,
     ...rest
   } = props;
+  console.log({ layout });
 
   if (!isItemsLoading && products.length === 0) {
     return (
