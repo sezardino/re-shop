@@ -1,3 +1,4 @@
+import { LoadingOverlay } from "@/components/UI/LoadingOverlay";
 import { HomeTemplate } from "@/components/templates/Home/HomeTemplate";
 import {
   useAddItemToInventoryMutation,
@@ -19,13 +20,19 @@ const HomePage = () => {
   if (!isItemsLoading && (inventoryError || productsError))
     return <Error statusCode={500} title="Something went wrong..." />;
 
+  const isLoading = isAddProductLoading || isResetInventoryLoading;
+
   return (
-    <HomeTemplate
-      isItemsLoading={isItemsLoading}
-      products={products}
-      onAddItemToInventory={addProduct}
-      onResetInventory={() => resetInventory({})}
-    />
+    <>
+      {isLoading && <LoadingOverlay />}
+
+      <HomeTemplate
+        isItemsLoading={isItemsLoading}
+        products={products}
+        onAddItemToInventory={addProduct}
+        onResetInventory={() => resetInventory({})}
+      />
+    </>
   );
 };
 

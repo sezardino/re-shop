@@ -1,3 +1,4 @@
+import { LoadingOverlay } from "@/components/UI/LoadingOverlay";
 import { NewProductFormValues } from "@/components/forms/NewProduct/NewProductForm";
 import { NewProductTemplate } from "@/components/templates/NewProduct/NewProductTemplate";
 import { ProjectUrls } from "@/const";
@@ -14,7 +15,13 @@ const NewProductPage = () => {
     router.push(ProjectUrls.home);
   };
 
-  return <NewProductTemplate onCreateProduct={createProductHandler} />;
+  return (
+    <>
+      {isPending && <LoadingOverlay />}
+
+      <NewProductTemplate onCreateProduct={createProductHandler} />
+    </>
+  );
 };
 
 export default NewProductPage;

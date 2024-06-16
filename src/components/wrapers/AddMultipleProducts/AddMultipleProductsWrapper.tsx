@@ -1,4 +1,5 @@
 import { ConfirmModal } from "@/components/UI/ConfirmModal";
+import { LoadingOverlay } from "@/components/UI/LoadingOverlay";
 import {
   ModalWithDescription,
   ModalWithDescriptionProps,
@@ -65,6 +66,8 @@ export const AddMultipleItemsToInventoryWrapper: FC<
 
   return (
     <>
+      {isAddingItems && <LoadingOverlay />}
+
       <ModalWithDescription
         {...rest}
         isOpen={step === "form"}
