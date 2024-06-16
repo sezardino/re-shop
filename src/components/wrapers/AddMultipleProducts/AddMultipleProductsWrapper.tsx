@@ -81,6 +81,7 @@ export const AddMultipleItemsToInventoryWrapper: FC<
         {!isItemsLoading && (
           <AddMultipleItemsToInventoryForm
             products={products}
+            initialValues={previewData}
             onFormSubmit={submitFormHandler}
             onCancelClick={onClose}
             aria-label={title}

@@ -29,6 +29,7 @@ export type AddMultipleItemsToInventoryFormValues = {
 };
 
 type Props = {
+  initialValues: AddMultipleItemsToInventoryFormValues | null;
   onFormSubmit: (values: AddMultipleItemsToInventoryFormValues) => void;
   products: (Product & { id: string; quantity: number })[];
   onCancelClick: () => void;
@@ -40,11 +41,20 @@ export type AddMultipleItemsToInventoryFormProps =
 export const AddMultipleItemsToInventoryForm: FC<
   AddMultipleItemsToInventoryFormProps
 > = (props) => {
-  const { products, onFormSubmit, onCancelClick, className, ...rest } = props;
+  const {
+    initialValues,
+    products,
+    onFormSubmit,
+    onCancelClick,
+    className,
+    ...rest
+  } = props;
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const formik = useFormik<AddMultipleItemsToInventoryFormValues>({
-    initialValues: addMultipleItemsToInventoryFormInitialValues,
+    initialValues: initialValues
+      ? initialValues
+      : addMultipleItemsToInventoryFormInitialValues,
     validationSchema: addMultipleItemsToInventoryFormValidationSchema,
     onSubmit: onFormSubmit,
   });
